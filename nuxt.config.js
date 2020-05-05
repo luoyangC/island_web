@@ -1,5 +1,3 @@
-const colors = require('vuetify/es5/util/colors').default
-
 module.exports = {
   mode: 'universal',
   head: {
@@ -39,18 +37,15 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '@/plugins/axios', ssr: true }
+    { src: '@/plugins/axios', ssr: true },
+    { src: '@/plugins/vuetify', ssr: true }
   ],
-  env: {
-    PORT: 2233
-  },
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+  // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/eslint-module'
   ],
   /*
   ** Nuxt.js modules
@@ -58,37 +53,6 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/dotenv',
     'cookie-universal-nuxt'
-  ],
-  /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: {
-      themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
-  },
-  /*
-  ** Build configuration
-  */
-  build: {
-    /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-    }
-  }
+  ]
 }
