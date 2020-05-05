@@ -37,15 +37,15 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '@/plugins/axios', ssr: true },
-    { src: '@/plugins/vuetify', ssr: true }
+    { src: '@/plugins/axios', ssr: true }
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
   // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify'
   ],
   /*
   ** Nuxt.js modules

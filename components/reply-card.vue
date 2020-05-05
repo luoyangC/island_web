@@ -16,19 +16,19 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <V-layout v-if="reply.is_like" justify-end align-center>
+            <v-layout v-if="reply.is_like" justify-end align-center>
               <v-btn icon small @click.stop="delLike(reply.is_like)">
                 <v-icon class="iconfont" color="red">icon-praise_fill</v-icon>
               </v-btn>
               <span>&nbsp;{{ reply.like_nums }}</span>
-            </V-layout>
+            </v-layout>
 
-            <V-layout v-else justify-end align-center>
+            <v-layout v-else justify-end align-center>
               <v-btn icon small @click.stop="addLike('reply', reply.id)">
                 <v-icon class="iconfont">icon-praise</v-icon>
               </v-btn>
               <span>&nbsp;{{ reply.like_nums }}</span>
-            </V-layout>
+            </v-layout>
           </v-list-item-action>
         </v-list-item>
 

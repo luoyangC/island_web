@@ -5,9 +5,9 @@
 
     <v-layout wrap justify-center>
 
-      <V-flex xs12 sm10 md8 lg6 xl6 ml-2 mr-2 style="height:0">
+      <v-flex xs12 sm10 md8 lg6 xl6 ml-2 mr-2 style="height:0">
         <v-img class="auth-avatar" :width="avatarSize" :height="avatarSize" src="https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/xg.png" />
-      </V-flex>
+      </v-flex>
 
       <v-flex xs12 sm10 md8 lg6 xl6 mb-5 mt-2 ml-2 mr-2>
 
