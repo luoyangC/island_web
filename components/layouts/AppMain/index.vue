@@ -6,7 +6,7 @@
  */
 <template>
   <v-content>
-    <nuxt />
+    <nuxt keep-alive />
     <!-- <live-card v-if="showLiveCard" /> -->
     <v-fab-transition origin="center center">
       <v-btn v-show="offsetTop > 1000" fixed bottom right fab @click="arrowUp">

@@ -6,15 +6,15 @@
  */
 
 // 根据时间自动切换夜间模式
-const autoDark = () => {
-  const now = new Date()
-  const hours = now.getHours()
-  if (hours <= 6 || hours <= 18) {
-    return false
-  } else {
-    return true
-  }
-}
+// const autoDark = () => {
+//   const now = new Date()
+//   const hours = now.getHours()
+//   if (hours <= 6 || hours <= 18) {
+//     return false
+//   } else {
+//     return true
+//   }
+// }
 
 export const state = () => ({
   clipped: false,
@@ -69,35 +69,39 @@ export const mutations = {
 }
 
 export const actions = {
-  setWindowSize(context, data) {
-    context.commit('SET_WINDOW_SIZE', data)
+  initApp({ dispatch }) {
+    dispatch('setRandomImage')
+    dispatch('setThem', 0)
   },
-  setRandomImage(context) {
+  setWindowSize({ commit }, data) {
+    commit('SET_WINDOW_SIZE', data)
+  },
+  setRandomImage({ commit }) {
     const randomImage = []
     for (let index = 0; index < 10; index++) {
       randomImage.push(Math.floor(Math.random() * 200))
     }
-    context.commit('SET_RANDOM_IMAGE', randomImage)
+    commit('SET_RANDOM_IMAGE', randomImage)
   },
-  setOffsetTop(context, data) {
-    context.commit('SET_OFFSET_TOP', data)
+  setOffsetTop({ commit }, data) {
+    commit('SET_OFFSET_TOP', data)
   },
-  setFontSize(context, data) {
-    context.commit('SET_FONT_SIZE', data)
+  setFontSize({ commit }, data) {
+    commit('SET_FONT_SIZE', data)
   },
-  setFontFamily(context, data) {
+  setFontFamily({ commit }, data) {
     let fontFamily = 'font-default'
     if (data === 1) {
       fontFamily = 'font-Serif'
     } else if (data === 2) {
       fontFamily = 'font-mono'
     }
-    context.commit('SET_FONT_FAMILY', fontFamily)
+    commit('SET_FONT_FAMILY', fontFamily)
   },
-  setDrawer(context, data) {
-    context.commit('SET_DRAWER', data)
+  setDrawer({ commit }, data) {
+    commit('SET_DRAWER', data)
   },
-  setThem(context, data) {
+  setThem({ commit }, data) {
     let them = ''
     let dark = false
     if (data === 1) {
@@ -110,9 +114,9 @@ export const actions = {
       dark = false
       them = 'them-height'
     } else {
-      dark = autoDark()
+      // dark = autoDark()
     }
-    context.commit('SET_THEM', them)
-    context.commit('SET_DARK', dark)
+    commit('SET_THEM', them)
+    commit('SET_DARK', dark)
   }
 }

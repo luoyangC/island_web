@@ -1,7 +1,7 @@
 <template>
   <v-layout column>
 
-    <jumbotron-card :height="parallaxHeight" :title="article.title" :lines="`${articleTime} • 阅读数: ${article.view_nums}`" :image="article.image" />
+    <jumbotron :height="parallaxHeight" :title="article.title" :lines="`${articleTime} • 阅读数: ${article.view_nums}`" :image="article.image" />
 
     <v-layout wrap justify-center>
 
@@ -24,39 +24,35 @@
             <v-divider />
           </v-layout>
           <v-layout justify-space-between pl-2 pr-2>
-            <v-btn rounded outlined @click="goBack">返回之前页面</v-btn>
-            <v-btn rounded outlined @click="setArticleParams('default')">返回文章首页</v-btn>
+            <v-btn rounded outlined @click="goBack">返回</v-btn>
+            <v-btn rounded outlined @click="setArticleParams('default')">首页</v-btn>
           </v-layout>
-
-          <v-responsive>
-            <v-expansion-panel>
-              <v-layout column>
-                <v-subheader>添加评论</v-subheader>
-                <v-layout v-if="currentUser.id" pl-3 pr-3>
-                  <v-text-field v-model="comment" label="评论" @keyup.enter="addComment" />
-                </v-layout>
-                <v-layout v-else column pl-2 pr-2>
-                  <v-btn rounded depressed nuxt to="/login">抱歉，添加评论功能需要先登录才能开启</v-btn>
-                </v-layout>
-                <v-subheader>评论列表</v-subheader>
-                <comment-card v-for="comment in comments" :key="comment.id" :comment="comment" />
-                <v-subheader>没有更多内容</v-subheader>
-              </v-layout>
-            </v-expansion-panel>
-          </v-responsive>
+          <v-layout column>
+            <v-subheader>添加评论</v-subheader>
+            <v-layout v-if="currentUser.id" pl-3 pr-3>
+              <v-text-field v-model="comment" label="评论" @keyup.enter="addComment" />
+            </v-layout>
+            <v-layout v-else column pl-2 pr-2>
+              <v-btn rounded depressed nuxt to="/login">抱歉，添加评论功能需要先登录才能开启</v-btn>
+            </v-layout>
+            <v-subheader>评论列表</v-subheader>
+            <v-expansion-panels v-model="expansion" accordion>
+              <v-expansion-panel v-for="(comment,index) in comments" :key="comment.id">
+                <comment-card :comment="comment" :index="index" :expansion.sync="expansion" />
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <v-subheader>没有更多内容</v-subheader>
+          </v-layout>
 
         </v-card>
       </v-flex>
     </v-layout>
-
-    <v-snackbar v-model="snackbar" top color="success" auto-height>{{ success }}</v-snackbar>
-
   </v-layout>
 </template>
 
 <script>
-import JumbotronCard from '@/components/jumbotron-card'
-import CommentCard from '@/components/comment-card'
+import Jumbotron from '@/components/jumbotron'
+import CommentCard from '@/components/CommentCard'
 import moment from 'moment'
 import { md } from '@/utils/markdown-it'
 import { mapGetters } from 'vuex'
@@ -65,23 +61,21 @@ export default {
     return /^\d+$/.test(params.id)
   },
   components: {
-    JumbotronCard,
+    Jumbotron,
     CommentCard
   },
-
   asyncData: async({ params, app }) => {
     const { data: article } = await app.$api.getArticleInfo(params.id)
-    // const comments = await $axios.get(`/comment/`, { params: { article: params.id }})
+    const { data: comments } = await app.$api.getComments({ article: params.id })
     const result = md.render(article.data.content)
     return {
       id: params.id,
       tags: article.data.tags ? article.data.tags.split(',') : [],
       article: article.data,
       content: result,
-      comments: [],
+      comments: comments.data,
       comment: '',
-      snackbar: false,
-      success: ''
+      expansion: -1
     }
   },
 
@@ -109,19 +103,18 @@ export default {
     setArticleParams(type, params) {
       let data
       if (type === 'tag') {
-        data = { tag: params }
+        data = { tag: params, page: 1, limit: 10 }
       } else if (type === 'default') {
         data = {}
       }
-      this.$store.commit('setArticleParams', data)
+      this.$store.dispatch('article/setParams', data)
       this.$router.push('/inspire')
     },
     async addComment() {
-      const { data } = await this.$axios.post(`/comment/`, { article: this.article.id, content: this.comment })
-      this.comments.unshift(data)
+      const { data } = await this.$api.addComment({ article: this.article.id, content: this.comment })
+      this.comments.unshift(data.data)
       this.comment = ''
-      this.snackbar = true
-      this.success = '评论添加成功！'
+      this.$message.success('评论添加成功！')
     }
   },
   head() {
@@ -150,6 +143,7 @@ export default {
 
 .chip
   padding 0 6px
+  margin-left 6px
 
 .markdown-content
   line-height 1.5

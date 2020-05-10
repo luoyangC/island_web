@@ -2,17 +2,14 @@
   <v-layout>
     <v-flex>
       <v-card flat class="reply">
-        <v-list-item avatar>
-          <v-list-item-avatar>
-            <img :src="reply.from_user.image">
-          </v-list-item-avatar>
+        <v-list-item>
 
           <v-list-item-content>
             <v-list-item-title>
-              {{ reply.from_user.username }} 回复
-              <a router :href="'/user/' + reply.to_user.id">{{ reply.to_user.username }}</a>
+              {{ reply.creator.username }} 回复
+              <a router :href="'/user/' + reply.receiver.id">{{ reply.receiver.username }}</a>
             </v-list-item-title>
-            <v-list-item-sub-title>2018.10.1</v-list-item-sub-title>
+            <v-list-item-subtitle>{{ reply.update_at | timeFormat }}</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
@@ -32,14 +29,20 @@
           </v-list-item-action>
         </v-list-item>
 
-        <v-card-text>{{ reply.content }}</v-card-text>
+        <v-card-text class="reply-content">{{ reply.content }}</v-card-text>
       </v-card>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
+import moment from 'moment'
 export default {
+  filters: {
+    timeFormat(time) {
+      return moment(time).format('MMM DD YYYY')
+    }
+  },
   props: {
     reply: {
       type: Object,
@@ -65,9 +68,13 @@ export default {
 
 <style lang="stylus">
 .reply
+  .v-list-item
+    padding 0 !important
   .v-list__tile
     padding 0 !important
   .v-card__text
     padding 0 !important
+  &-content
+    padding 0 2px 0 2px
 </style>
 

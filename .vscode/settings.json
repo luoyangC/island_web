@@ -1,13 +1,18 @@
 {
   "cSpell.ignoreWords": [
+    "camelcase",
     "consola",
     "cval",
     "exdate",
     "expiredays",
     "hljs",
+    "iife",
+    "isnan",
     "koa",
     "koa's",
+    "linebreak",
     "linkify",
+    "nonwords",
     "nuxt",
     "nuxtjs",
     "styl",

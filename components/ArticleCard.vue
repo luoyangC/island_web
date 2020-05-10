@@ -4,7 +4,7 @@
       <v-container dark-background fill-height fluid>
         <v-layout column fill-height justify-center align-center>
           <h1 class="mb-3">{{ article.title }}</h1>
-          <h3>{{ articleTime }} • {{ article.topicName }}</h3>
+          <h3>{{ articleTime }} • {{ article.category }}</h3>
         </v-layout>
       </v-container>
     </v-img>
@@ -52,4 +52,3 @@ export default {
   -o-transform: translateY(-4px) scale(1.05)
   transform: translateY(-4px) scale(1.05)
 </style>
-

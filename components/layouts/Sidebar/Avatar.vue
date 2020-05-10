@@ -8,7 +8,7 @@
   <v-layout justify-center mt-5 mb-5>
     <v-hover v-if="currentUser.id">
       <v-avatar slot-scope="{ hover }" size="80" color="grey lighten-4">
-        <img :src="currentUser.image" alt="avatar">
+        <img :src="currentUser.avatar" alt="avatar">
         <v-expand-transition>
           <v-card v-if="hover" class="transition-fast-in-fast-out v-card--reveal" ripple nuxt to="/user">
             <v-icon large dark>touch_app</v-icon>

@@ -1,12 +1,12 @@
 <template>
   <v-layout column>
     <!-- 顶部图片 -->
-    <jumbotron-card :height="parallaxHeight" :image="currentImage">
+    <jumbotron :height="parallaxHeight" :image="currentImage">
       <v-avatar size="100" color="grey lighten-4">
         <img class="rotate" src="https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/xigua.png" alt="avatar">
       </v-avatar>
       <h1 class="title-text font-weight-bold display-2 mb-3">Amor</h1>
-    </jumbotron-card>
+    </jumbotron>
     <!-- 文字介绍 -->
     <v-layout wrap justify-center>
       <v-flex xs12 sm10 md8 lg6 xl6 mb-5 mt-2 ml-2 mr-2>
@@ -68,12 +68,12 @@
 </template>
 
 <script>
-import JumbotronCard from '@/components/jumbotron-card'
+import Jumbotron from '@/components/jumbotron'
 import PageBottom from '@/components/PageBottom'
 import { mapGetters } from 'vuex'
 export default {
   components: {
-    JumbotronCard,
+    Jumbotron,
     PageBottom
   },
   asyncData: async({ app }) => {

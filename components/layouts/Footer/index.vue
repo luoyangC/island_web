@@ -9,7 +9,7 @@
     <v-layout column justify-center align-center>
       <v-layout>&copy; 2020</v-layout>
       <v-layout justify-center align-center>
-        <v-img height="18" width="18" src="https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/beiantubiao.ico" />
+        <v-img height="18" width="18" :src="`${$settings.aliOSS}image/icons/beiantubiao.ico`" />
         <a href="http://www.beian.miit.gov.cn" rel="external nofollow">&nbsp;渝 ICP 备 18014351 号&nbsp;</a>
       </v-layout>
     </v-layout>

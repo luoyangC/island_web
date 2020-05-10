@@ -22,7 +22,7 @@
         <v-list-item-title class="text-center">归档</v-list-item-title>
       </v-list-item>
 
-      <v-list-item v-for="(item, i) in archives" :key="i" router exact @click="handleParams('time', item)">
+      <v-list-item v-for="(item, i) in archives" :key="i" router exact @click="handleParams('time', item.archive)">
         <v-list-item-content>
           <v-list-item-title class="text-center" v-text="item.archive" />
         </v-list-item-content>

@@ -48,7 +48,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ArticleCard from '@/components/article-card'
+import ArticleCard from '@/components/ArticleCard'
 export default {
 
   components: {
@@ -57,8 +57,8 @@ export default {
 
   asyncData: async({ app, store }) => {
     const imageId = app.store.getters['app/randomImage'][0] || 100
-    const { data: sentence } = await app.$api.getSentence(Math.floor(Math.random() * 20))
-    const { data: articles } = await app.$api.getArticles(store.getters['artocle/params'])
+    const { data: sentence } = await app.$api.getSentence(Math.floor(Math.random() * 20) + 1)
+    const { data: articles } = await app.$api.getArticles(store.getters['article/params'])
     return {
       articles: articles.data,
       sentence: sentence.data,

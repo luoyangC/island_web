@@ -24,7 +24,7 @@ export const mutations = {
 }
 
 export const actions = {
-  setParams(context, data) {
-    context.commit('SET_PARAMS', data)
+  setParams({ commit }, data) {
+    commit('SET_PARAMS', data)
   }
 }

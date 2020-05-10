@@ -7,33 +7,32 @@
 <template>
   <v-navigation-drawer :clipped="clipped" :value="drawer" temporary app @input="navigation">
     <!-- 侧栏顶栏 -->
-    <navbar-toolbar @default="setArticleParams" />
+    <toolbar @default="setArticleParams" />
     <!-- 侧栏头像 -->
-    <navbar-avatar />
+    <avatar />
     <!-- 侧栏搜索 -->
-    <navbar-search @search="setArticleParams" />
+    <search @search="setArticleParams" />
     <!-- 侧栏工具 -->
-    <navbar-option />
+    <action />
     <!-- 侧栏导航 -->
-    <navbar-list @params="setArticleParams" />
+    <list @params="setArticleParams" />
   </v-navigation-drawer>
 </template>
 
 <script>
-import moment from 'moment'
 import { mapGetters } from 'vuex'
-import NavbarToolbar from './NavbarToolbar'
-import NavbarAvatar from './NavbarAvatar'
-import NavbarSearch from './NavbarSearch'
-import NavbarOption from './NavbarOption'
-import NavbarList from './NavbarList'
+import Toolbar from './Toolbar'
+import Avatar from './Avatar'
+import Search from './Search'
+import Action from './Action'
+import List from './List'
 export default {
   components: {
-    NavbarToolbar,
-    NavbarAvatar,
-    NavbarSearch,
-    NavbarOption,
-    NavbarList
+    Toolbar,
+    Avatar,
+    Search,
+    Action,
+    List
   },
   data: () => ({
     search: ''
@@ -57,7 +56,7 @@ export default {
       if (type === 'category') {
         data = { category: params, page: 1, limit: 10 }
       } else if (type === 'time') {
-        data = { time: moment(params).format('YYYY-MM') }
+        data = { time: params, page: 1, limit: 10 }
       } else if (type === 'search') {
         data = { search: params, page: 1, limit: 10 }
         this.search = ''

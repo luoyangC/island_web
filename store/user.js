@@ -5,7 +5,7 @@
  * @Last Modified time: 2019-08-24 15:51:36
  */
 export const state = () => ({
-  currentUser: { id: null, image: 'https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/xigua.png' },
+  currentUser: { id: null, avatar: '' },
   token: ''
 })
 
@@ -24,7 +24,16 @@ export const mutations = {
 }
 
 export const actions = {
-  setCurrentUser(context, data) {
-    context.commit('SET_CURRENT_USER', data)
+  async setCurrentUser({ commit }) {
+    this.$api.getUserInfo().then((res) => {
+      commit('SET_CURRENT_USER', res.data.data)
+    })
+  },
+  setToken({ commit }, token) {
+    commit('SET_TOKEN', token)
+  },
+  logout({ commit }) {
+    commit('SET_TOKEN', '')
+    commit('SET_CURRENT_USER', { id: null, avatar: '' })
   }
 }

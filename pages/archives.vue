@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <jumbotron-card :height="parallaxHeight" title="记录" lines="最后编辑于 2018 年 08 月 23 日" :image="currentImage" />
+    <jumbotron :height="parallaxHeight" title="记录" lines="最后编辑于 2018 年 08 月 23 日" :image="currentImage" />
     <v-layout justify-center>
       <v-flex xs12 sm10 md8 lg6 xl6 ml-3 mr-2>
         <v-timeline align-top :dense="dense">
@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import JumbotronCard from '@/components/jumbotron-card'
+import Jumbotron from '@/components/jumbotron'
 import PageBottom from '@/components/PageBottom'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 export default {
   components: {
-    JumbotronCard,
+    Jumbotron,
     PageBottom
   },
   asyncData: async({ app }) => {

@@ -1,28 +1,25 @@
 <template>
   <v-app v-scroll="onScroll" v-resize="onResize" :style="fontStyle" :class="[them, fontFamily]">
-    <!-- app侧边栏 -->
-    <app-navbar />
     <!-- app顶栏 -->
-    <app-toolbar />
+    <Header />
+    <!-- app侧边栏 -->
+    <Sidebar />
     <!-- app主体 -->
     <app-main />
     <!-- app底栏 -->
-    <app-footer />
+    <Footer />
   </v-app>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import AppMain from '@/components/layouts/AppMain'
-import AppNavbar from '@/components/layouts/AppNavbar'
-import AppToolbar from '@/components/layouts/AppToolbar'
-import AppFooter from '@/components/layouts/AppFooter'
+import { AppMain, Sidebar, Header, Footer } from '@/components/layouts'
 export default {
   components: {
     AppMain,
-    AppNavbar,
-    AppToolbar,
-    AppFooter
+    Sidebar,
+    Header,
+    Footer
   },
   computed: {
     ...mapGetters('app', [
@@ -36,14 +33,12 @@ export default {
     }
   },
   watch: {
-    dark(val) {
-      this.$vuetify.theme.dark = val
+    dark: {
+      handler(val) {
+        this.$vuetify.theme.dark = val
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.initThem()
-    this.getUserInfo()
-    this.randomImage()
   },
   mounted() {
     this.onResize()
@@ -58,19 +53,6 @@ export default {
     onResize() {
       const windowSize = { x: window.innerWidth, y: window.innerHeight }
       this.$store.dispatch('app/setWindowSize', windowSize)
-    },
-    // 随机生成顶部图片
-    randomImage() {
-      this.$store.dispatch('app/setRandomImage')
-    },
-    // 初始化主题
-    initThem() {
-      this.$store.dispatch('app/setThem', 0)
-    },
-    // 获取用户信息
-    async getUserInfo() {
-      const { data } = await this.$api.getUserInfo()
-      this.$store.dispatch('user/setCurrentUser', data)
     }
   }
 }
