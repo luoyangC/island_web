@@ -6,15 +6,15 @@
  */
 
 // 根据时间自动切换夜间模式
-// const autoDark = () => {
-//   const now = new Date()
-//   const hours = now.getHours()
-//   if (hours <= 6 || hours <= 18) {
-//     return false
-//   } else {
-//     return true
-//   }
-// }
+const autoDark = () => {
+  const now = new Date()
+  const hours = now.getHours()
+  if (hours <= 6 || hours <= 18) {
+    return false
+  } else {
+    return true
+  }
+}
 
 export const state = () => ({
   clipped: false,
@@ -114,7 +114,7 @@ export const actions = {
       dark = false
       them = 'them-height'
     } else {
-      // dark = autoDark()
+      dark = autoDark()
     }
     commit('SET_THEM', them)
     commit('SET_DARK', dark)
