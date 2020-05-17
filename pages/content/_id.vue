@@ -6,7 +6,7 @@
     <v-layout wrap justify-center>
 
       <v-flex xs12 sm10 md8 lg6 xl6 ml-2 mr-2 style="height:0">
-        <v-img class="auth-avatar" :width="avatarSize" :height="avatarSize" src="https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/xg.png" />
+        <v-img class="auth-avatar" :width="avatarSize" :height="avatarSize" src="https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/icons/xg.png" @click="handleEdit" />
       </v-flex>
 
       <v-flex xs12 sm10 md8 lg6 xl6 mb-5 mt-2 ml-2 mr-2>
@@ -29,18 +29,22 @@
           </v-layout>
           <v-layout column>
             <v-subheader>添加评论</v-subheader>
-            <v-layout v-if="currentUser.id" pl-3 pr-3>
-              <v-text-field v-model="comment" label="评论" @keyup.enter="addComment" />
+            <v-layout v-if="currentUser.id" column pl-3 pr-3 pb-4>
+              <v-textarea v-model="comment" flat solo outlined hide-details rows="3" placeholder="写下你的评论.." @focus="handleFocusInput" />
+              <v-expand-transition>
+                <v-layout v-show="showBtn" justify-end pt-3 pb-4>
+                  <v-btn class="mr-2" rounded depressed color="#ec7259" dark @click="handleSendComment">发布</v-btn>
+                  <v-btn class="ml-2" rounded outlined color="#999999" @click="handelCancelComment">取消</v-btn>
+                </v-layout>
+              </v-expand-transition>
             </v-layout>
             <v-layout v-else column pl-2 pr-2>
               <v-btn rounded depressed nuxt to="/login">抱歉，添加评论功能需要先登录才能开启</v-btn>
             </v-layout>
             <v-subheader>评论列表</v-subheader>
-            <v-expansion-panels v-model="expansion" accordion>
-              <v-expansion-panel v-for="(comment,index) in comments" :key="comment.id">
-                <comment-card :comment="comment" :index="index" :expansion.sync="expansion" />
-              </v-expansion-panel>
-            </v-expansion-panels>
+            <v-layout v-for="(comment,index) in comments" :key="comment.id">
+              <comment-card :comment="comment" :index="index" :expansion.sync="expansion" />
+            </v-layout>
             <v-subheader>没有更多内容</v-subheader>
           </v-layout>
 
@@ -67,17 +71,21 @@ export default {
   asyncData: async({ params, app }) => {
     const { data: article } = await app.$api.getArticleInfo(params.id)
     const { data: comments } = await app.$api.getComments({ article: params.id })
-    const result = md.render(article.data.content)
+    const result = md.render(article.content)
     return {
       id: params.id,
-      tags: article.data.tags ? article.data.tags.split(',') : [],
-      article: article.data,
+      tags: article.tags ? article.tags.split(',') : [],
+      article: article,
       content: result,
-      comments: comments.data,
+      comments: comments,
       comment: '',
       expansion: -1
     }
   },
+
+  data: () => ({
+    showBtn: false
+  }),
 
   computed: {
     ...mapGetters('app', [
@@ -97,6 +105,18 @@ export default {
   },
 
   methods: {
+    handleFocusInput() {
+      this.showBtn = true
+    },
+    handleSendComment() {
+      this.addComment()
+    },
+    handelCancelComment() {
+      this.showBtn = false
+    },
+    handleEdit() {
+      this.$router.push({ name: 'content', params: { editId: this.id }})
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -112,7 +132,7 @@ export default {
     },
     async addComment() {
       const { data } = await this.$api.addComment({ article: this.article.id, content: this.comment })
-      this.comments.unshift(data.data)
+      this.comments.unshift(data)
       this.comment = ''
       this.$message.success('评论添加成功！')
     }

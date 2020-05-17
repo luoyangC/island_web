@@ -4,9 +4,8 @@ import { parseTime } from '@/utils'
 export default ({ app, redirect, store }, inject) => {
   const axios = app.$axios
 
-  axios.defaults.timeout = 5000
-  // axios.defaults.baseURL = 'https://luoyangc.cn/api/v1'
-  axios.defaults.baseURL = 'http://127.0.0.1:8000/api/v1'
+  axios.defaults.timeout = 60 * 1000
+  axios.defaults.baseURL = 'https://luoyangc.cn/api/v1'
 
   axios.onRequest(config => {
     const token = app.$cookies.get('token')
@@ -27,11 +26,14 @@ export default ({ app, redirect, store }, inject) => {
       response.config.method,
       response.config.url,
       response.config.params || {},
-      response.config.data && JSON.parse(response.config.data) || {},
+      response.config.data && (typeof response.config.data === 'string') ? JSON.parse(response.config.data) : {},
       response.data.message || 'ok'
     )
+    if (response.config.url.includes('oss-cn-shanghai.aliyuncs.com')) {
+      return Promise.resolve({ message: 'success' })
+    }
     if (response.data.code === 2000) {
-      return Promise.resolve(response)
+      return Promise.resolve(response.data)
     } else {
       !process.server && app.$message.error(response.data.message)
       switch (response.data.code) {

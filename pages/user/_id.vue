@@ -46,10 +46,10 @@ export default {
   },
 
   async asyncData({ params, app }) {
-    const { data } = await app.$api.getUserInfoById(params.id)
+    const { data: userInfo } = await app.$api.getUserInfoById(params.id)
 
     return {
-      user: data.data
+      user: userInfo
     }
   }
 }

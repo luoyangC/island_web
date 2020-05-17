@@ -1,37 +1,29 @@
 <template>
-  <v-layout>
-    <v-flex>
-      <v-card flat class="reply">
-        <v-list-item>
+  <v-layout column>
+    <v-card flat width="100%" class="reply pt-5 pb-4">
 
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ reply.creator.username }} 回复
-              <a router :href="'/user/' + reply.receiver.id">{{ reply.receiver.username }}</a>
-            </v-list-item-title>
-            <v-list-item-subtitle>{{ reply.update_at | timeFormat }}</v-list-item-subtitle>
-          </v-list-item-content>
+      <v-list-item class="reply-info">
+        <v-list-item-avatar>
+          <v-img :src="reply.creator.avatar" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{ reply.creator.username }}</v-list-item-title>
+          <v-list-item-subtitle>{{ reply.update_at | timeFormat }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-          <v-list-item-action>
-            <v-layout v-if="reply.is_like" justify-end align-center>
-              <v-btn icon small @click.stop="delLike(reply.is_like)">
-                <v-icon class="iconfont" color="red">icon-praise_fill</v-icon>
-              </v-btn>
-              <span>&nbsp;{{ reply.like_nums }}</span>
-            </v-layout>
+      <v-card-text class="reply-content"><a router :href="'/user/' + reply.receiver.id">@ {{ reply.receiver.username }} </a>{{ reply.content }}</v-card-text>
 
-            <v-layout v-else justify-end align-center>
-              <v-btn icon small @click.stop="addLike('reply', reply.id)">
-                <v-icon class="iconfont">icon-praise</v-icon>
-              </v-btn>
-              <span>&nbsp;{{ reply.like_nums }}</span>
-            </v-layout>
-          </v-list-item-action>
-        </v-list-item>
-
-        <v-card-text class="reply-content">{{ reply.content }}</v-card-text>
-      </v-card>
-    </v-flex>
+      <v-card-actions class="reply-action">
+        <div class="action-item" @click="handleShowReply(reply.creator)">
+          <v-btn icon small>
+            <v-icon small>mdi-message</v-icon>
+          </v-btn>
+          <span class="mr-3">回复</span>
+        </div>
+      </v-card-actions>
+    </v-card>
+    <v-divider />
   </v-layout>
 </template>
 
@@ -40,7 +32,7 @@ import moment from 'moment'
 export default {
   filters: {
     timeFormat(time) {
-      return moment(time).format('MMM DD YYYY')
+      return moment(time).format('YYYY.MM.DD HH:MM')
     }
   },
   props: {
@@ -50,17 +42,8 @@ export default {
     }
   },
   methods: {
-    // 点赞
-    async addLike(type, id) {
-      const { data } = await this.$axios.post(`/like/`, { like_type: type, like_id: id })
-      this.reply.like_nums += 1
-      this.reply.is_like = data.id
-    },
-    // 取消点赞
-    async delLike(id) {
-      await this.$axios.delete(`/like/${id}/`)
-      this.reply.like_nums -= 1
-      this.reply.is_like = false
+    handleShowReply(user) {
+      this.$emit('showReply', user)
     }
   }
 }
@@ -68,13 +51,20 @@ export default {
 
 <style lang="stylus">
 .reply
-  .v-list-item
-    padding 0 !important
-  .v-list__tile
-    padding 0 !important
-  .v-card__text
-    padding 0 !important
+  &-info
+    padding 0
+    .v-list-item__avatar
+      margin-right 10px !important
   &-content
-    padding 0 2px 0 2px
+    padding 0 16px 0 0
+    font-size: 1.2rem
+    color: #404040 !important
+  &-action
+    padding 0 16px 0 0
+    margin-top 8px
+    margin-left -5px
+    .action-item
+      display flex
+      align-items center
 </style>
 

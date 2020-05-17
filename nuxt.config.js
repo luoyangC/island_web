@@ -13,7 +13,8 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+      { rel: 'stylesheet', href: 'https://cdn.repository.webfont.com/webfonts/nomal/132351/45904/5ec0e978f629d8081cc5e779.css' }
     ],
     script: [
       { src: 'https://at.alicdn.com/t/font_1596119_e24nz6akxf.js', async: true, defer: true },
@@ -41,7 +42,9 @@ module.exports = {
   plugins: [
     { src: '@/plugins/axios', ssr: true },
     { src: '@/plugins/message', ssr: false },
-    { src: '@/plugins/settings', ssr: true }
+    { src: '@/plugins/settings', ssr: true },
+    { src: '@/plugins/mavon', ssr: false },
+    { src: '@/plugins/upload', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules

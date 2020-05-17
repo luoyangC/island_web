@@ -25,9 +25,8 @@ export const mutations = {
 
 export const actions = {
   async setCurrentUser({ commit }) {
-    this.$api.getUserInfo().then((res) => {
-      commit('SET_CURRENT_USER', res.data.data)
-    })
+    const { data } = await this.$api.getUserInfo()
+    commit('SET_CURRENT_USER', data)
   },
   setToken({ commit }, token) {
     commit('SET_TOKEN', token)

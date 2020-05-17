@@ -1,8 +1,11 @@
 {
   "cSpell.ignoreWords": [
+    "accessid",
+    "aliyuncs",
     "camelcase",
     "consola",
     "cval",
+    "cyjianxk",
     "exdate",
     "expiredays",
     "hljs",
@@ -12,11 +15,13 @@
     "koa's",
     "linebreak",
     "linkify",
+    "mavon",
     "nonwords",
     "nuxt",
     "nuxtjs",
     "styl",
     "vuetify",
+    "webfont",
     "xigua"
   ]
 }

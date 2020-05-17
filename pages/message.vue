@@ -60,7 +60,7 @@ export default {
     const { data: messages } = await app.$api.getMessages()
     return {
       content: '',
-      messages: messages.data,
+      messages: messages,
       currentImage: `${app.$settings.aliOSS}image/random/${imageId}.png`
     }
   },
@@ -81,7 +81,7 @@ export default {
     async addMessage(anonymous, user) {
       const { data } = await this.$api.addMessage({ content: this.content, anonymous })
       this.$message.success('留言添加成功！')
-      this.messages.unshift(data.data)
+      this.messages.unshift(data)
     }
   }
 

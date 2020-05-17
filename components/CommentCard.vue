@@ -1,58 +1,49 @@
 <template>
-  <v-layout justify-center pt-2 pb-2>
-    <v-flex>
-      <v-card flat>
+  <v-layout pb-4>
+    <v-card flat width="100%">
 
-        <v-list-item>
-          <v-list-item-avatar @click="handelExpansion">
-            <v-img :src="comment.creator.avatar" />
-          </v-list-item-avatar>
+      <v-list-item class="comment-info">
+        <v-list-item-avatar>
+          <v-img :src="comment.creator.avatar" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{ comment.creator.username }}</v-list-item-title>
+          <v-list-item-subtitle>{{ comment.update_at | timeFormat }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-          <v-list-item-content @click="setToUser(comment.creator)">
-            <v-list-item-title v-text="comment.creator.username" />
-            <v-list-item-subtitle>{{ comment.update_at | timeFormat }}</v-list-item-subtitle>
-          </v-list-item-content>
+      <v-card-text class="comment-content" @click="setToUser(comment.creator)">{{ comment.content }}</v-card-text>
 
-          <v-list-item-action>
-            <v-layout v-if="comment.is_like" justify-end align-center>
-              <!-- <v-btn icon small @click="delLike(comment.is_like)">
-                <v-icon class="iconfont" color="red">icon-praise_fill</v-icon>
-              </v-btn> -->
-              <span>&nbsp;{{ comment.like_nums }}</span>
-            </v-layout>
+      <v-card-actions class="comment-action">
+        <div class="action-item" @click="handleLike(comment.is_like)">
+          <v-btn icon small :color="comment.is_like ? 'red' : ''">
+            <v-icon small>mdi-thumb-up</v-icon>
+          </v-btn>
+          <span class="mr-3">{{ comment.like_nums }}</span>
+        </div>
+        <div class="action-item" @click="handleShowReply(comment.creator)">
+          <v-btn icon small>
+            <v-icon small>mdi-message</v-icon>
+          </v-btn>
+          <span class="mr-3">回复</span>
+        </div>
+      </v-card-actions>
 
-            <v-layout v-else justify-end align-center>
-              <!-- <v-btn icon small @click="addLike('comment', comment.id)">
-                <v-icon class="iconfont">icon-praise</v-icon>
-              </v-btn> -->
-              <span>&nbsp;{{ comment.like_nums }}</span>
-            </v-layout>
-          </v-list-item-action>
-        </v-list-item>
+      <v-layout column class="comment-reply">
+        <v-divider />
+        <reply-card v-for="item in replies" :key="item.id" mb-3 :reply="item" @showReply="handleShowReply" />
+      </v-layout>
 
-        <v-card-text class="comment-content" @click="setToUser(comment.creator)">{{ comment.content }}</v-card-text>
-
-        <v-card-actions class="comment-content">
-          <v-expansion-panel-content v-model="expansion" ripple>
-            <!-- <v-card v-if="comment.reply_nums > 0" slot="header" flat>
-              <v-icon class="iconfont">icon-comments</v-icon>&nbsp;{{ comment.reply_nums }}&nbsp;查看全部回复
-            </v-card>
-            <v-card v-else slot="header" flat>
-              <v-icon class="iconfont">icon-comments</v-icon>&nbsp;{{ comment.reply_nums }}&nbsp;点击添加回复
-            </v-card> -->
-            <v-card flat @click.stop>
-              <v-layout v-for="item in replies" :key="item.id" v-ripple mb-3 @click.stop="setToUser(item.creator)">
-                <reply-card :reply="item" />
-              </v-layout>
-              <v-text-field v-if="currentUser.id" v-model="reply" :label="'回复 ' + toUser.username" @keyup.enter="addReplay" />
-            </v-card>
-          </v-expansion-panel-content>
-        </v-card-actions>
-        <v-layout pr-3>
-          <v-divider v-show="!expansion" inset />
-        </v-layout>
-      </v-card>
-    </v-flex>
+      <v-expand-transition>
+        <div v-show="showReply" class="comment-input">
+          <v-textarea v-model="reply" flat solo outlined hide-details rows="3" :placeholder="placeholder" />
+          <v-layout justify-end mt-3>
+            <v-btn class="mr-2" rounded depressed color="#ec7259" dark @click="handleSendReply">发布</v-btn>
+            <v-btn class="ml-2" rounded outlined color="#999999" @click="handelCancelReply">取消</v-btn>
+          </v-layout>
+        </div>
+      </v-expand-transition>
+    </v-card>
   </v-layout>
 </template>
 
@@ -66,7 +57,7 @@ export default {
   },
   filters: {
     timeFormat(time) {
-      return moment(time).format('MMM DD YYYY')
+      return moment(time).format('YYYY.MM.DD HH:MM')
     }
   },
   props: {
@@ -86,10 +77,9 @@ export default {
   data() {
     return {
       reply: '',
-      toUser: {
-        id: null,
-        username: null
-      },
+      showReply: false,
+      placeholder: '',
+      toUser: { id: null, username: null },
       replies: []
     }
   },
@@ -104,29 +94,42 @@ export default {
     if (this.comment.reply_nums > 0) this.getData()
   },
   methods: {
-    handelExpansion() {
-      this.$emit('update:expansion', this.expansion !== this.index ? this.index : -1)
+    handleSendReply() {
+      this.addReplay()
+      this.showReply = false
     },
-    // 指定添加回复的接收者
-    setToUser(user) {
+    handelCancelReply() {
+      this.toUser = { id: null, username: null }
+      this.reply = ''
+      this.showReply = false
+    },
+    handleShowReply(user) {
       this.toUser = user
+      this.placeholder = `@ ${user.username} `
+      this.showReply = true
+    },
+    handleLike(id) {
+      if (id) {
+        this.delLike(id)
+      } else {
+        this.addLike(this.comment.id)
+      }
     },
     // 获取数据
     async getData() {
       // 获取回复列表
       const { data } = await this.$api.getReplies({ comment: this.comment.id })
-      this.replies = data.data
+      this.replies = data
     },
     // 点赞
-    async addLike(type, id) {
-      const { data } = await this.$axios.post(`/like/`, { like_type: type, like_id: id })
+    async addLike(id) {
+      const { data } = await this.$api.addLike({ like_type: 'comment', like_id: id })
       this.comment.like_nums++
       this.comment.is_like = data.id
     },
-    // 取消点赞
     async delLike(id) {
-      await this.$axios.delete(`/like/${id}/`)
-      this.comment.like_nums -= 1
+      await this.$api.delLike(id)
+      this.comment.like_nums--
       this.comment.is_like = false
     },
     // 添加回复
@@ -136,7 +139,7 @@ export default {
         return
       }
       const { data } = await this.$api.addReply({ comment: this.comment.id, receiver_id: this.toUser.id, content: this.reply })
-      this.replies.unshift(data.data)
+      this.replies.unshift(data)
       this.reply = ''
       this.comment.reply_nums += 1
       this.$message.success('回复添加成功！')
@@ -146,12 +149,22 @@ export default {
 </script>
 
 <style lang="stylus">
-.comment-content
-  padding 0 16px 0 72px
-  .v-expansion-panel__header
-    padding 0 !important
-  .v-expansion-panel-content
-    width 100%
-  .v-expansion-panel-content__wrap
-    padding 0
+.comment
+  &-info
+    .v-list-item__avatar
+      margin-right 10px !important
+  &-content
+    padding 0 16px 0 66px
+    font-size: 1.2rem
+    color: #404040 !important
+  &-action
+    padding 0 16px 16px 62px
+    margin-top 8px
+    .action-item
+      display flex
+      align-items center
+  &-input
+    padding 0 16px 0 66px
+  &-reply
+    padding 0 16px 0 66px
 </style>

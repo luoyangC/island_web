@@ -3,7 +3,7 @@
     <v-card color="transparent" flat>
       <v-card-title>
         <v-layout column mb-2>
-          <v-layout align-center align-text sentence-font>
+          <v-layout align-center align-text sentence-font css20c6b945e5204ff>
             醉后不知天在水<br>
             满船清梦压星河<br>
           </v-layout>
@@ -54,7 +54,6 @@ export default {
 }
 
 .sentence-font {
-  font-family: 'webfont' !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;

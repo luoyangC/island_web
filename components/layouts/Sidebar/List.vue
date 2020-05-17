@@ -54,33 +54,25 @@
 </template>
 
 <script>
-// import moment from 'moment'
+import { mapGetters } from 'vuex'
 export default {
   name: 'NavbarList',
   data: () => ({
-    categories: [],
-    archives: [],
     pages: [
       { icon: 'event_note', title: '记录', to: '/archives' },
       { icon: 'chat', title: '留言', to: '/message' },
       { icon: 'recent_actors', title: '关于', to: '/about' }
     ]
   }),
-  created() {
-    this.getData()
+  computed: {
+    ...mapGetters('article', [
+      'categories',
+      'archives'
+    ])
   },
   methods: {
     handleParams(type, data) {
       this.$emit('params', type, data)
-    },
-    // 获取接口数据
-    async getData() {
-      // 获取分类数据
-      const { data: categories } = await this.$api.getCategories()
-      this.categories = categories.data
-      // 获取归档数据
-      const { data: archives } = await this.$api.getArchives()
-      this.archives = archives.data
     }
   }
 }

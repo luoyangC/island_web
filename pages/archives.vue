@@ -31,11 +31,11 @@ export default {
   asyncData: async({ app }) => {
     const imageId = app.store.getters['app/randomImage'][1] || 100
     const { data: profiles } = await app.$api.getProfiles()
-    profiles.data.forEach(element => {
+    profiles.forEach(element => {
       element.time = moment(element.update_time).format('MMM DD YYYY')
     })
     return {
-      profiles: profiles.data,
+      profiles: profiles,
       currentImage: `https://luoyangc.oss-cn-shanghai.aliyuncs.com/media/image/random/${imageId}.png`
     }
   },

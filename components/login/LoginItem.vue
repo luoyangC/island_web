@@ -59,7 +59,7 @@ export default {
     },
     async login() {
       const { data } = await this.$api.login(this.loginInfo)
-      this.$cookies.set('token', data.data.token)
+      this.$cookies.set('token', data.token)
       this.$store.dispatch('user/setCurrentUser')
       this.$router.go(-1)
     }
