@@ -32,9 +32,9 @@ export const mutations = {
 }
 
 export const actions = {
-  initArticle({ dispatch }) {
-    dispatch('setCategories')
-    dispatch('setArchives')
+  async initArticle({ dispatch }) {
+    await dispatch('setCategories')
+    await dispatch('setArchives')
   },
   async setCategories({ commit }) {
     const { data: categories } = await this.$api.getCategories()
